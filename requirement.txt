@@ -1,0 +1,4 @@
+wget
+scikit-learn
+pandas
+dvc
