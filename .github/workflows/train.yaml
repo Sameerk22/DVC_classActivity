@@ -1,0 +1,32 @@
+name: DVC Tracking with Github Actions
+on: [push]
+jobs:
+  run:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Running_updates
+        env: 
+          GH_TOKEN: ${{ github.token }}
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+        if: github.ref == 'refs/heads/modelchanges'
+        run: |
+            make install 
+            dvc repro
+            git fetch --prune
+            dvc metrics diff --show-md master
+            gh pr create --title "DVC Metrics Diff" --body "$(dvc metrics diff --show-md master)"
+      
+      - name: Running_updates2
+        env: 
+          GH_TOKEN: ${{ github.token }}
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+        if: github.ref == 'refs/heads/master'       
+        run: |
+         make install
+         dvc repro
+         git fetch --prune
+         dvc metrics diff --show-md master
