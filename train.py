@@ -9,7 +9,9 @@ from sklearn.metrics import confusion_matrix
 import string
 import json
 
-df = pd.read_csv("data_processed.csv")
+df = pd.read_csv("processed_data.csv")
+
+df['message'].fillna('', inplace=True)
 
 
 def text_process(title):
